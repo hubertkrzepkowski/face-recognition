@@ -3,6 +3,7 @@ import os, sys
 import cv2
 import numpy as np
 from tinydb import TinyDB, Query
+import tkinter.scrolledtext as tkscrolled
 from tkinter import *
 root = Tk()
 
@@ -80,7 +81,7 @@ def fr():
                     if True in matches:
                         first_match_index = matches.index(True)
                         name = known_face_names[first_match_index]
-                        recognized_Faces.add(name)
+                      #  recognized_Faces.add(name)
                     face_names.append(name)
 
             process_this_frame = not process_this_frame
@@ -106,37 +107,40 @@ def fr():
 
             if cv2.waitKey(1) & 0xFF == 13:
                 for face in recognized_Faces:
-                    Present = ''.join(face)
+                    T.insert(END, face)
+                    T.insert(END, "\n")
 
-
-                T.insert(END, Present)
+                T.config(state=DISABLED)
                 video_capture.release()
                 cv2.destroyAllWindows()
                 break
 
 
 
+large_font = ('Verdana',15)
 
 
 
-entry = Entry(root)
+entry = Entry(root, font=large_font)
+entry.insert(0, 'Imie')
 entry.pack()
 
-entry1 = Entry(root)
+entry1 = Entry(root,font=large_font)
+entry1.insert(0, 'Nazwisko')
 entry1.pack()
 
 root.title("Obecność")
 root.geometry("1024x600+50+50")
 
-print_button = Button(root, text='Dodawanie Osoby!', command=Photo)
+print_button = Button(root, text='Dodawanie Osoby!', command=Photo, height =3, width = 30)
 print_button.pack()
 
-print_button1 = Button(root, text='Sprawdź obecność!', command=fr)
+print_button1 = Button(root, text='Sprawdź obecność!', command=fr, height =3, width =30)
 print_button1.pack()
 
-label = Label(root, text='Lista Obecności')
+label = Label(root, text='Lista Obecności :',font=large_font)
 label.pack()
-T = Text(root, height=2, width=30)
+T = Text(root, height=30, width=50)
 T.pack()
 
 
