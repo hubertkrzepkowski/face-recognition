@@ -1,5 +1,4 @@
 import face_recognition
-<<<<<<< HEAD
 import os, sys
 import cv2
 import numpy as np
@@ -147,7 +146,6 @@ T.pack()
 
 
 root.mainloop()
-=======
 import cv2
 
 
@@ -244,4 +242,3 @@ while True:
 # Release handle to the webcam
 video_capture.release()
 cv2.destroyAllWindows()
->>>>>>> 50f4370f88f8443a5056465f2288ca8f66e17b76
