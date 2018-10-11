@@ -1,4 +1,4 @@
-from tkinter import messagebox
+﻿from tkinter import messagebox
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -7,7 +7,7 @@ import face_recognition
 import os, sys
 import cv2
 import numpy as np
-from tinydb import TinyDB, Query
+#from tinydb import TinyDB, Query
 import tkinter.scrolledtext as tkscrolled
 from tkinter import *
 root = Tk()
@@ -17,21 +17,10 @@ nazwa=''
 nazwisko = ''
 recognized_Faces = set([])
 
-def send_message():
-    USERNAME = 'ptprojektfr@gmail.com'
-    PASSWORD = '12345QWERTY!@#$%'
-    server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-    server.login("ptprojektfr@gmail.com", "12345QWERTY!@#$%")
-    server.sendmail(
-        "from@address.com",
-        "Hkrzepa@address.com",
-        "this message is from python")
-    server.quit()
-
 
 
 def Photo():
-    messagebox.showinfo("INFO", "Aby zapisać osobę naduś enter")
+    messagebox.showinfo("INFO", "Aby zapisać osobe wcisnij enter")
     cap = cv2.VideoCapture(0)
     print(os.listdir('.//zdjecia'))
     while (True):
@@ -44,17 +33,25 @@ def Photo():
         # Display the resulting frame
         cv2.imshow('frame', frame)
         if cv2.waitKey(1) & 0xFF == 13:
-            cv2.imwrite(".//zdjecia/"+entry.get()+entry1.get()+".jpg", frame)
-            entry.delete(0, END)
-            entry1.delete(0,END)
-            break
+            face_locations = face_recognition.face_locations(frame)
+            if 1 == len(face_locations):
+             cv2.imwrite(".//zdjecia/"+entry.get().strip()+" "+entry1.get().strip()+" "+entryindeks.get().strip()+".jpg", frame)
+             entry1.delete(0,END)
+             entry.delete(0,END)
+             entryindeks.delete(0,END)
+             entry.insert(0, 'Imie')
+             entry1.insert(0, 'Nazwisko')
+             entryindeks.insert(0, 'Numer Indeksu')
+             break
+            else:
+                messagebox.showinfo("INFO", "Nie wykryto twarzy lub wykryto wiecej niz jedna twarz - Sprobuj ponownie")
 
     # When everything done, release the capture
     cap.release()
     cv2.destroyAllWindows()
 
 def fr():
-        messagebox.showinfo("INFO", "Aby zakończyć sprawdzanie obecności naduś enter")
+        messagebox.showinfo("INFO", "Aby zakonczyc sprawdzanie obecnosci wcisnij enter")
         known_face_encodings = []
         known_face_names = []
 
@@ -102,7 +99,7 @@ def fr():
                         first_match_index = matches.index(True)
                         name = known_face_names[first_match_index]
                         recognized_Faces.add(name)
-                        face_names.append(name)
+                    face_names.append(name)
 
             process_this_frame = not process_this_frame
 
@@ -123,7 +120,7 @@ def fr():
                 cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
 
             # Display the resulting image
-                cv2.imshow('Video', frame)
+            cv2.imshow('Video', frame)
              #3   T.delete(S, END)
             if cv2.waitKey(1) & 0xFF == 13:
                 currentDT = datetime.datetime.now()
@@ -139,7 +136,11 @@ def fr():
 
                 finally:
                     plik.close()
-                    messagebox.showinfo("INFO", "Lista obecności została zapisana do pliku \""+entryprzedmiot.get()+" "+entrygrupa.get()+" "+(currentDT.strftime("%Y-%m-%d %H,%M"))+".txt\"" +" w folderze ListyObecności.")
+                    entryprzedmiot.delete(0,END)
+                    entrygrupa.delete(0,END)
+                    entryprzedmiot.insert(0, 'Przedmiot')
+                    entrygrupa.insert(0, 'Grupa')
+                    messagebox.showinfo("INFO", "Lista obecnosci została zapisana do pliku \""+entryprzedmiot.get()+" "+entrygrupa.get()+" "+(currentDT.strftime("%Y-%m-%d %H,%M"))+".txt\"" +" w folderze ListyObecnosci.")
                 video_capture.release()
                 cv2.destroyAllWindows()
                 break
@@ -170,7 +171,7 @@ entrygrupa = Entry(root,font=large_font)
 entrygrupa.insert(0, 'Grupa')
 entrygrupa.grid(row=1, column=0)
 
-root.title("Obecność")
+root.title("Obecnosć")
 root.geometry("530x300+50+50")
 
 print_button = Button(root, text='Dodawanie Osoby!', command=Photo, height =3, width = 30)
@@ -179,8 +180,8 @@ print_button.grid(row=3, column=1)
 #print_button_email = Button(root, text='email', command=send_message, height =3, width = 30)
 #print_button_email.grid(row=3, column=1)
 
-print_button1 = Button(root, text='Sprawdź obecność!', command=fr, height =3, width =30)
-print_button1.grid(row=2, column=0)
+print_button1 = Button(root, text='Sprawdz obecnosć!', command=fr, height =3, width =30)
+print_button1.grid(row=3, column=0)
 
 
 
